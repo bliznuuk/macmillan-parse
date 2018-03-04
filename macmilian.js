@@ -25,18 +25,28 @@ function partOfSpeech(parent){
   appendToResult(partOfSpeech);
 }
 
-function checkSyntax(body){
+function getSyntax(body){
   var syntax = body.getElementsByClassName("SYNTAX-CODING")[0];
   if (syntax != null && syntax.parentNode == body){
-    appendToResult(syntax.childNodes[1].textContent);
+    var text = syntax.childNodes[1].textContent;
+    appendToResult(text);
+    
+    return text;
   }
+  
+  return null;
 }
 
-function checkDefinition(body){
+function getDefinition(body){
   var definition = body.getElementsByClassName("DEFINITION")[0];
   if (definition.parentNode == body){
-    appendToResult(definition.textContent);
+    var text = definition.textContent;
+    appendToResult(text);
+
+    return text;
   }
+  
+  return null;
 }
 
 function parseLi(li){
@@ -53,8 +63,8 @@ function parseLi(li){
   }
   appendToResult(separator + num);
   
-  checkSyntax(body);
-  checkDefinition(body);
+  getSyntax(body);
+  getDefinition(body);
 }
 
 

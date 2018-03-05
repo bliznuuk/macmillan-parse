@@ -50,17 +50,32 @@ function getDefinition(body){
 }
 
 function getExamples(body){
+  stringOfExamples = "";
   examples = body.getElementsByClassName("EXAMPLES");
+
   for(let example of examples){
     if (example.parentNode == body){
-      var text = example.textContent;
-      //don't append user info
-      appendToResult(text);
+      //example = [phrase: ]sentence
+      var phrase = example.getElementsByTagName("strong")[0];
+      var sentence = example.querySelectorAll("p.EXAMPLE")[0];
+      
+      //check if phrase exist and append it to the result
+      if (phrase != null){
+        var text = phrase.textContent;
+        stringOfExamples += text + ": ";
+        appendToResult(text);
+      }
+      
+      //check if example exist and append it to the result
+      if (sentence != null){
+        var text = sentence.textContent;
+        stringOfExamples += text + "\n";
+        appendToResult(text);
+      }
     }
   }
-  //
   
-  //return array of examples.text | dynamic?
+  return stringOfExamples;
 }
 
 function parseLi(li){

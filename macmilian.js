@@ -49,6 +49,20 @@ function getDefinition(body){
   return null;
 }
 
+function getExamples(body){
+  examples = body.getElementsByClassName("EXAMPLES");
+  for(let example of examples){
+    if (example.parentNode == body){
+      var text = example.textContent;
+      //don't append user info
+      appendToResult(text);
+    }
+  }
+  //
+  
+  //return array of examples.text | dynamic?
+}
+
 function parseLi(li){
   var num = li.getElementsByClassName("SENSE-NUM")[0].textContent;
   var separator;
@@ -65,6 +79,7 @@ function parseLi(li){
   
   getSyntax(body);
   getDefinition(body);
+  getExamples(body);
 }
 
 

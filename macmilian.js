@@ -78,6 +78,36 @@ function getExamples(body){
   return stringOfExamples;
 }
 
+function getCategorySynonyms(body){
+  var THES = body.getElementsByClassName("THES")[0];
+  if ((THES != null) && (THES.parentNode == body)){ 
+    
+    var snippets = THES.getElementsByClassName("thessnippet");
+    for(let snippet of snippets){
+      var category = getCategory(snippet);
+      var synonyms = getSynonyms(snippet);
+      appendToResult(category);
+      appendToResult(synonyms);
+    }
+    
+  }
+}
+
+function getCategory(snippet){
+  var category = snippet.getElementsByClassName("cattitle")[0];
+  if (category.parentNode == snippet){
+    return category.textContent;
+  }
+}
+
+function getSynonyms(snippet){
+  var synonyms = snippet.getElementsByClassName("synonyms")[0];
+  if (synonyms.parentNode == snippet){
+    return synonyms.textContent;
+  }
+  
+}
+
 function parseLi(li){
   var num = li.getElementsByClassName("SENSE-NUM")[0].textContent;
   var separator;
@@ -95,6 +125,7 @@ function parseLi(li){
   getSyntax(body);
   getDefinition(body);
   getExamples(body);
+  getCategorySynonyms(body);
 }
 
 

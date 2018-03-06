@@ -3,7 +3,14 @@ var result = "";
 word();
 
 var headbar = document.getElementById("headbar");
-partOfSpeech(headbar);
+
+var partOfSpeech = partOfSpeech(headbar);
+if (partOfSpeech == "phrasal verb"){
+  getSyntax(headbar);
+}
+else{
+  getTranscription(headbar);
+}
 
 
 var liTags = document.getElementById("leftContent").getElementsByClassName("senses")[0].getElementsByTagName("li");
@@ -35,6 +42,16 @@ function getSyntax(body){
   }
   
   return null;
+}
+
+function getTranscription(headbar){
+  var transcr = headbar.getElementsByClassName("PRON")[0];
+  if ((transcr != null) && (transcr.parentNode.parentNode == headbar)){
+    var text = transcr.childNodes[1].textContent;
+    appendToResult(text);
+    
+    return text;
+  }
 }
 
 function getDefinition(body){

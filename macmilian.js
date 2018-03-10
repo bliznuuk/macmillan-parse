@@ -1,43 +1,62 @@
-var result = "";
+function WordCard(name) {
+  this.name = name;
+  this.addNotNullProperty = function(propertyName, value){
+    if (value != null){
+      this[propertyName] = value;
+    }
+  }
+}
 
-word();
+function Sense(){
+  //add subSense to the array senses
+  this.addSubSense = function(subSense){
+    if (this.senses == undefined){
+      this.senses = [];
+    }
+    this.senses[this.senses.length] = subSense;
+  }
+  this.addNotNullProperty = WordCard.prototype.addNotNullProperty;
+}
+
+var word = new WordCard(getWord());
 
 var headbar = document.getElementById("headbar");
 
-var partOfSpeech = partOfSpeech(headbar);
-if (partOfSpeech == "phrasal verb"){
-  getSyntax(headbar);
+word.addNotNullProperty("partOfSpeech", getPartOfSpeech(headbar));
+
+if (word.partOfSpeech == "PHRASAL VERB"){
+  word.addNotNullProperty("syntaxCoding", getSyntax(headbar));
 }
 else{
-  getTranscription(headbar);
+  word.addNotNullProperty("transcription", getTranscription(headbar));
 }
 
 
 var liTags = document.getElementById("leftContent").getElementsByClassName("senses")[0].getElementsByTagName("li");
-for(i = 0; i < liTags.length; i++){
-  var lisChild = liTags[i].firstChild;
-  parseLi(lisChild);
+word.senses = [];
+for(let i = 0; i < liTags.length; i++){
+  let lisChild = liTags[i].firstChild;
+  parseLi(word.senses, lisChild);
 };
 
 
+console.log(word);
 
-function word(){
+function getWord(){
   var span = document.getElementById("headwordleft").getElementsByClassName("BASE")[0];
   var word = span.textContent;
-  appendToResult(word);
+  return word;
 }
 
-function partOfSpeech(parent){
+function getPartOfSpeech(parent){
   var partOfSpeech = parent.getElementsByClassName("PART-OF-SPEECH")[0].innerText;
-  appendToResult(partOfSpeech);
+  return partOfSpeech;
 }
 
 function getSyntax(body){
   var syntax = body.getElementsByClassName("SYNTAX-CODING")[0];
   if (syntax != null && syntax.parentNode == body){
     var text = syntax.childNodes[1].textContent;
-    appendToResult(text);
-    
     return text;
   }
   
@@ -48,10 +67,10 @@ function getTranscription(headbar){
   var transcr = headbar.getElementsByClassName("PRON")[0];
   if ((transcr != null) && (transcr.parentNode.parentNode == headbar)){
     var text = transcr.childNodes[1].textContent;
-    appendToResult(text);
-    
     return text;
   }
+  
+  return null
 }
 
 function getDefinition(body){
@@ -125,19 +144,24 @@ function getSynonyms(snippet){
   
 }
 
-function parseLi(li){
-  var num = li.getElementsByClassName("SENSE-NUM")[0].textContent;
-  var separator;
-  var body;
+function parseLi(senses, li){
+  let sense = new Sense();
+  let body;
+  //If this is main sense body:
+  //add object sense to the array senses
   if (li.className == "SENSE"){
-    separator = "___";
+    senses[senses.length] = sense;
     body = li.getElementsByClassName("SENSE-BODY")[0];
   }
-  if (li.className == "SUB-SENSE-BODY"){
-    separator = "_~__";
+  //If this is sub sense body:
+  //add object sense to the last object in the array senses
+  else if (li.className == "SUB-SENSE-BODY"){
+    senses[senses.length-1].addSubSense(sense);
     body = li.getElementsByClassName("SUB-SENSE-CONTENT")[0];
   }
-  appendToResult(separator + num);
+
+  let num = li.getElementsByClassName("SENSE-NUM")[0].textContent;
+  //word.addNotNullProperty("num", num);
   
   getSyntax(body);
   getDefinition(body);
@@ -148,6 +172,6 @@ function parseLi(li){
 
 function appendToResult(text){
   text = text.trim();
-  console.log(text);
-  result += text + "\n";
+//  console.log(text);
+//result += text + "\n";
 }

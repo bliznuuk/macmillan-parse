@@ -76,15 +76,14 @@ function getTranscription(headbar){
 }
 
 function getDefinition(body){
-  var definition = body.getElementsByClassName("DEFINITION")[0];
-  if (definition.parentNode == body){
-    var text = definition.textContent;
-    appendToResult(text);
+  let Definition = {};
+  Definition.syntax = getSyntax(body);
+  Definition.subjectArea = getChildText(body, "SUBJECT-AREA");
+  Definition.dialect = getChildText(body, "DIALECT");
+  Definition.style = getChildText(body, "STYLE-LEVEL");
+  Definition.definition = getChildText(body, "DEFINITION");
 
-    return text;
-  }
-  
-  return null;
+  return Definition;
 }
 
 function getExamples(body){
@@ -163,12 +162,23 @@ function parseLi(senses, li){
   }
 
   let num = li.getElementsByClassName("SENSE-NUM")[0].textContent;
-  //sense.addNotNullProperty("num", num);
+  sense.addNotNullProperty("num", num);
   
-  getSyntax(body);
-  getDefinition(body);
-  getExamples(body);
-  getCategorySynonyms(body);
+  sense.addNotNullProperty("definition", getDefinition(body));
+  sense.addNotNullProperty("examples", getExamples(body));
+  sense.addNotNullProperty("categories", getCategorySynonyms(body));
+}
+
+function getChildText(element, className){
+  getOnlyChild(element, className, 0);
+}
+
+function getChildText(element, className, childNumber){
+  let result = element.getElementsByClassName(className)[childNumber];
+  if (result.parentNode == element){
+    return element.textContent;
+  }
+  return null;
 }
 
 

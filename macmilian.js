@@ -1,21 +1,23 @@
-function WordCard(name) {
-  this.name = name;
-  this.addNotNullProperty = function(propertyName, value){
-    if (value != null){
-      this[propertyName] = value;
-    }
+function addNotNullProperty(propertyName, value){
+  if (value != null){
+    this[propertyName] = value;
   }
 }
 
+function WordCard(name) {
+  this.name = name;
+}
+WordCard.prototype.addNotNullProperty = addNotNullProperty;
+
 function Sense(){
-  //add subSense to the array senses
-  this.addSubSense = function(subSense){
-    if (this.senses == undefined){
-      this.senses = [];
-    }
-    this.senses[this.senses.length] = subSense;
+}
+Sense.prototype.addNotNullProperty = addNotNullProperty;
+//add subSense to the senses array
+Sense.prototype.addSubSense = function(subSense){
+  if (this.senses == undefined){
+    this.senses = [];
   }
-  this.addNotNullProperty = WordCard.prototype.addNotNullProperty;
+  this.senses[this.senses.length] = subSense;
 }
 
 var word = new WordCard(getWord());
@@ -161,7 +163,7 @@ function parseLi(senses, li){
   }
 
   let num = li.getElementsByClassName("SENSE-NUM")[0].textContent;
-  //word.addNotNullProperty("num", num);
+  //sense.addNotNullProperty("num", num);
   
   getSyntax(body);
   getDefinition(body);

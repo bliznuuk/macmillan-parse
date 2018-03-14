@@ -87,32 +87,25 @@ function getDefinition(body){
 }
 
 function getExamples(body){
-  stringOfExamples = "";
+  arrayOfExamples = [];
   examples = body.getElementsByClassName("EXAMPLES");
 
   for(let example of examples){
     if (example.parentNode == body){
-      //example = [phrase: ]sentence
-      var phrase = example.getElementsByTagName("strong")[0];
-      var sentence = example.querySelectorAll("p.EXAMPLE")[0];
+      let Example = {};
+      Example.prototype.addNotNullProperty = addNotNullProperty;
       
-      //check if phrase exist and append it to the result
-      if (phrase != null){
-        var text = phrase.textContent;
-        stringOfExamples += text + ": ";
-        appendToResult(text);
-      }
+      let phrase = getChildText(example, "strong");
+      let sentence = example.querySelectorAll("p.EXAMPLE")[0];
       
-      //check if example exist and append it to the result
-      if (sentence != null){
-        var text = sentence.textContent;
-        stringOfExamples += text + "\n";
-        appendToResult(text);
-      }
+      Example.addNotNullProperty("phrase", phrase);
+      Example.addNotNullProperty("sentence", sentence);
+      
+      arrayOfExamples.push(Example);
     }
   }
   
-  return stringOfExamples;
+  return arrayOfExamples;
 }
 
 function getCategorySynonyms(body){
@@ -175,7 +168,7 @@ function getChildText(element, className){
 
 function getChildText(element, className, childNumber){
   let result = element.getElementsByClassName(className)[childNumber];
-  if (result.parentNode == element){
+  if ((result != null) && (result.parentNode == element)){
     return element.textContent;
   }
   return null;

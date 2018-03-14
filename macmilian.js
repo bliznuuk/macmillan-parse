@@ -87,8 +87,8 @@ function getDefinition(body){
 }
 
 function getExamples(body){
-  arrayOfExamples = [];
-  examples = body.getElementsByClassName("EXAMPLES");
+  let arrayOfExamples = [];
+  let examples = body.getElementsByClassName("EXAMPLES");
 
   for(let example of examples){
     if (example.parentNode == body){
@@ -109,33 +109,24 @@ function getExamples(body){
 }
 
 function getCategorySynonyms(body){
-  var THES = body.getElementsByClassName("THES")[0];
-  if ((THES != null) && (THES.parentNode == body)){ 
-    
-    var snippets = THES.getElementsByClassName("thessnippet");
+  let arrayOfCategories = [];
+  
+  let thes = body.getElementsByClassName("THES")[0];
+
+  if ((thes != null) && (thes.parentNode == body)){ 
+    let snippets = thes.getElementsByClassName("thessnippet");
     for(let snippet of snippets){
-      var category = getCategory(snippet);
-      var synonyms = getSynonyms(snippet);
-      appendToResult(category);
-      appendToResult(synonyms);
+      let Category = {};
+      Category.category = getChildText(snippet, "cattitle");
+      Category.synonyms = getChildText(snippet, "synonyms");
+      
+      arrayOfCategories.push(Category);
     }
     
-  }
-}
-
-function getCategory(snippet){
-  var category = snippet.getElementsByClassName("cattitle")[0];
-  if (category.parentNode == snippet){
-    return category.textContent;
-  }
-}
-
-function getSynonyms(snippet){
-  var synonyms = snippet.getElementsByClassName("synonyms")[0];
-  if (synonyms.parentNode == snippet){
-    return synonyms.textContent;
+    return arrayOfCategories;
   }
   
+  return null;
 }
 
 function parseLi(senses, li){

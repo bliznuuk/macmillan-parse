@@ -164,14 +164,20 @@ function getChildText(element, className, childNumber){
 
   let result = element.getElementsByClassName(className)[childNumber];
   if ((result != null) && (result.parentNode == element)){
-    return result.textContent;
+    return getTrimText(result.textContent);
   }
   return null;
 }
 
 function getTextContent(element){
   if ((element != undefined) && (element != null)){
-    return element.textContent;
+    return getTrimText(element.textContent);
   }
   return null;
+}
+
+function getTrimText(text){
+  let result = text.replace(/^[\.\s,:]+|[\.\s,:]+$/g, "");
+  console.log(text);
+  return result
 }

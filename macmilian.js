@@ -4,14 +4,19 @@ function addNotNullProperty(propertyName, value){
   }
 }
 
+
 function WordCard(name) {
   this.name = name;
 }
 WordCard.prototype.addNotNullProperty = addNotNullProperty;
 
-function Sense(){
-}
-Sense.prototype.addNotNullProperty = addNotNullProperty;
+
+function Meaning(){}
+Meaning.prototype.addNotNullProperty = addNotNullProperty;
+
+
+function Sense(){}
+Sense.prototype = Object.create(Meaning.prototype);
 //add subSense to the senses array
 Sense.prototype.addSubSense = function(subSense){
   if (this.senses == undefined){
@@ -19,6 +24,7 @@ Sense.prototype.addSubSense = function(subSense){
   }
   this.senses[this.senses.length] = subSense;
 }
+
 
 var word = new WordCard(getWord());
 
@@ -76,12 +82,12 @@ function getTranscription(headbar){
 }
 
 function getDefinition(body){
-  let Definition = {};
-  Definition.syntax = getSyntax(body);
-  Definition.subjectArea = getChildText(body, "SUBJECT-AREA");
-  Definition.dialect = getChildText(body, "DIALECT");
-  Definition.style = getChildText(body, "STYLE-LEVEL");
-  Definition.definition = getChildText(body, "DEFINITION");
+  let Definition = new Meaning();
+  Definition.addNotNullProperty("syntax", getSyntax(body));
+  Definition.addNotNullProperty("subjectArea", getChildText(body, "SUBJECT-AREA"));
+  Definition.addNotNullProperty("dialect", getChildText(body, "DIALECT"));
+  Definition.addNotNullProperty("style", getChildText(body, "STYLE-LEVEL"));
+  Definition.addNotNullProperty("definition", getChildText(body, "DEFINITION"));
 
   return Definition;
 }
@@ -92,14 +98,14 @@ function getExamples(body){
 
   for(let example of examples){
     if (example.parentNode == body){
-      let Example = {};
-      Example.prototype.addNotNullProperty = addNotNullProperty;
+      let Example = new Meaning();
       
-      let phrase = getChildText(example, "strong");
+      //let phrase = getChildText(example, "strong");
+      let phrase = example.getElementsByTagName("strong")[0];
       let sentence = example.querySelectorAll("p.EXAMPLE")[0];
       
-      Example.addNotNullProperty("phrase", phrase);
-      Example.addNotNullProperty("sentence", sentence);
+      Example.addNotNullProperty("phrase", getTextContent(phrase));
+      Example.addNotNullProperty("sentence", getTextContent(sentence));
       
       arrayOfExamples.push(Example);
     }
@@ -116,9 +122,9 @@ function getCategorySynonyms(body){
   if ((thes != null) && (thes.parentNode == body)){ 
     let snippets = thes.getElementsByClassName("thessnippet");
     for(let snippet of snippets){
-      let Category = {};
-      Category.category = getChildText(snippet, "cattitle");
-      Category.synonyms = getChildText(snippet, "synonyms");
+      let Category = new Meaning();
+      Category.addNotNullProperty("category", getChildText(snippet, "cattitle"));
+      Category.addNotNullProperty("synonyms", getChildText(snippet, "synonyms"));
       
       arrayOfCategories.push(Category);
     }
@@ -153,21 +159,19 @@ function parseLi(senses, li){
   sense.addNotNullProperty("categories", getCategorySynonyms(body));
 }
 
-function getChildText(element, className){
-  getOnlyChild(element, className, 0);
-}
-
 function getChildText(element, className, childNumber){
+  if (childNumber == undefined) childNumber = 0;
+
   let result = element.getElementsByClassName(className)[childNumber];
   if ((result != null) && (result.parentNode == element)){
-    return element.textContent;
+    return result.textContent;
   }
   return null;
 }
 
-
-function appendToResult(text){
-  text = text.trim();
-//  console.log(text);
-//result += text + "\n";
+function getTextContent(element){
+  if ((element != undefined) && (element != null)){
+    return element.textContent;
+  }
+  return null;
 }

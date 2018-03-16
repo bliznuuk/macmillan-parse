@@ -48,6 +48,9 @@ for(let i = 0; i < liTags.length; i++){
 };
 
 
+var wordJson = JSON.stringify(word);
+
+console.log(wordJson);
 console.log(word);
 
 function getWord(){
@@ -96,6 +99,9 @@ function getExamples(body){
   let arrayOfExamples = [];
   let examples = body.getElementsByClassName("EXAMPLES");
 
+  if((examples == undefined) || (examples == null) || (examples.length == 0) ){
+    return null;
+  }
   for(let example of examples){
     if (example.parentNode == body){
       let Example = new Meaning();
@@ -104,14 +110,18 @@ function getExamples(body){
       let phrase = example.getElementsByTagName("strong")[0];
       let sentence = example.querySelectorAll("p.EXAMPLE")[0];
       
-      Example.addNotNullProperty("phrase", getTextContent(phrase));
-      Example.addNotNullProperty("sentence", getTextContent(sentence));
-      
-      arrayOfExamples.push(Example);
+      let phraseText = getTextContent(phrase);
+      let sentenceText = getTextContent(sentence);
+      Example.addNotNullProperty("phrase", phraseText);
+      Example.addNotNullProperty("sentence", sentenceText);
+
+      if((sentenceText != null) || (phraseText != null)){
+        arrayOfExamples.push(Example);
+      }
     }
   }
   
-  return arrayOfExamples;
+  return (arrayOfExamples.length != 0) ? arrayOfExamples : null;
 }
 
 function getCategorySynonyms(body){
@@ -178,6 +188,5 @@ function getTextContent(element){
 
 function getTrimText(text){
   let result = text.replace(/^[\.\s,:]+|[\.\s,:]+$/g, "");
-  console.log(text);
   return result
 }

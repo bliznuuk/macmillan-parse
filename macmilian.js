@@ -49,9 +49,25 @@ for(let i = 0; i < liTags.length; i++){
 
 
 var wordJson = JSON.stringify(word);
+var audioSrc = document.getElementById("headbar").getElementsByClassName("PRONS")[0].getElementsByClassName("sound")[0].getAttribute("data-src-mp3");
 
 console.log(wordJson);
 console.log(word);
+console.log(audioSrc);
+
+var audioLink = document.createElement("a");
+audioLink.appendChild(document.createTextNode(audioSrc));
+audioLink.title = audioSrc;
+audioLink.href = audioSrc;
+
+var jsonContainer = document.createElement("div");
+jsonContainer.innerText = wordJson;
+
+var innerRightCol = document.getElementById("innerrightcol");
+//innerRightCol.innerHTML = "";
+innerRightCol.appendChild(audioLink);
+innerRightCol.appendChild(jsonContainer);
+
 
 function getWord(){
   var span = document.getElementById("headwordleft").getElementsByClassName("BASE")[0];
@@ -161,7 +177,7 @@ function parseLi(senses, li){
     body = li.getElementsByClassName("SUB-SENSE-CONTENT")[0];
   }
 
-  let num = li.getElementsByClassName("SENSE-NUM")[0].textContent;
+  let num = getChildText(li, "SENSE-NUM");
   sense.addNotNullProperty("num", num);
   
   sense.addNotNullProperty("definition", getDefinition(body));

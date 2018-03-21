@@ -47,6 +47,12 @@ for(let i = 0; i < liTags.length; i++){
   parseLi(word.senses, lisChild);
 };
 
+var menu = document.getElementById("menu");
+word.addNotNullProperty("menu", getMenu(menu));
+
+var phrases = document.getElementById("phrases_container");
+word.addNotNullProperty("phrases", getMenu(phrases));
+
 
 var wordJson = JSON.stringify(word);
 var audioSrc = document.getElementById("headbar").getElementsByClassName("PRONS")[0].getElementsByClassName("sound")[0].getAttribute("data-src-mp3");
@@ -98,6 +104,26 @@ function getTranscription(headbar){
   }
   
   return null
+}
+
+function getMenu(menu){
+  if ((menu == undefined) || (menu == null)){
+    return null;
+  }
+  
+  let lis = menu.getElementsByTagName("li");
+  if ((lis == undefined) || (lis == null) || (lis.length == 0)){
+    return null
+  }
+
+  let result = [];
+  for (let li of lis){
+    let text = li.textContent;
+    if (text != null){
+      result.push(text);
+    }
+  }
+  return result;
 }
 
 function getDefinition(body){

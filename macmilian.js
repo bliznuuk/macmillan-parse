@@ -53,6 +53,9 @@ word.addNotNullProperty("menu", getMenu(menu));
 var phrases = document.getElementById("phrases_container");
 word.addNotNullProperty("phrases", getMenu(phrases));
 
+var phrasalVerbs = document.getElementById("phrasal_verbs_container");
+word.addNotNullProperty("phrasalVerbs", getMenu(phrasalVerbs));
+
 
 var wordJson = JSON.stringify(word);
 var audioSrc = document.getElementById("headbar").getElementsByClassName("PRONS")[0].getElementsByClassName("sound")[0].getAttribute("data-src-mp3");

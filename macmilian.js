@@ -56,6 +56,8 @@ word.addNotNullProperty("phrases", getMenu(phrases));
 var phrasalVerbs = document.getElementById("phrasal_verbs_container");
 word.addNotNullProperty("phrasalVerbs", getMenu(phrasalVerbs));
 
+word.addNotNullProperty("relatedWords", getRelatedWords());
+
 
 var wordJson = JSON.stringify(word);
 var audioSrc = document.getElementById("headbar").getElementsByClassName("PRONS")[0].getElementsByClassName("sound")[0].getAttribute("data-src-mp3");
@@ -116,7 +118,7 @@ function getMenu(menu){
   
   let lis = menu.getElementsByTagName("li");
   if ((lis == undefined) || (lis == null) || (lis.length == 0)){
-    return null
+    return null;
   }
 
   let result = [];
@@ -125,6 +127,36 @@ function getMenu(menu){
     if (text != null){
       result.push(text);
     }
+  }
+  return result;
+}
+
+function getRelatedWords(){
+  let reletedEntries = document.getElementById("relatedentries");
+  if ((reletedEntries == undefined) || (reletedEntries == null)){
+    return null;
+  }
+
+  let entryList = reletedEntries.getElementsByClassName("entrylist")[0];
+  if ((entryList == undefined) || (entryList == null)){
+    return null;
+  }
+  
+  let lis = entryList.getElementsByTagName("li");
+  if ((lis == undefined) || (lis == null) || (lis.length == 0)){
+    return null;
+  }
+
+  let result = [];
+  for (let li of lis){
+    let base = getTextContent(li.getElementsByClassName("BASE")[0]);
+    let partOfSpeech = getTextContent(li.getElementsByClassName("PART-OF-SPEECH")[0]);
+    
+    let ReletedWord = new Meaning();
+    ReletedWord.addNotNullProperty("word", base);
+    ReletedWord.addNotNullProperty("partOfSpeech", partOfSpeech);
+    
+    result.push(ReletedWord);
   }
   return result;
 }

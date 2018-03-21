@@ -176,7 +176,7 @@ function getCategorySynonyms(body){
     for(let snippet of snippets){
       let Category = new Meaning();
       Category.addNotNullProperty("category", getChildText(snippet, "cattitle"));
-      Category.addNotNullProperty("synonyms", getChildText(snippet, "synonyms"));
+      Category.addNotNullProperty("synonyms", getSynonyms(snippet));
       
       arrayOfCategories.push(Category);
     }
@@ -185,6 +185,25 @@ function getCategorySynonyms(body){
   }
   
   return null;
+}
+
+function getSynonyms(snippet){
+  let synonyms = snippet.getElementsByClassName("synonyms")[0];
+  if ((synonyms == undefined) || (synonyms == null)){
+    return null;
+  }
+  
+  let synonymsArr = synonyms.getElementsByTagName("a");
+  if ((synonymsArr == undefined) || (synonymsArr == null) || (synonymsArr.length == 0)){
+    return null;
+  }
+  
+  let result = [];
+  for (let a of synonymsArr){
+    result.push(a.textContent);
+  }
+  
+  return result;
 }
 
 function parseLi(senses, li){

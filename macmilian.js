@@ -67,8 +67,8 @@ console.log(word);
 console.log(audioSrc);
 
 var audioLink = document.createElement("a");
-audioLink.appendChild(document.createTextNode(audioSrc));
-audioLink.title = audioSrc;
+audioLink.appendChild(document.createTextNode("Download audio"));
+audioLink.download = "";
 audioLink.href = audioSrc;
 
 var jsonContainer = document.createElement("div");

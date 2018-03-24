@@ -60,16 +60,30 @@ word.addNotNullProperty("relatedWords", getRelatedWords());
 
 
 var wordJson = JSON.stringify(word);
-var audioSrc = document.getElementById("headbar").getElementsByClassName("PRONS")[0].getElementsByClassName("sound")[0].getAttribute("data-src-mp3");
+
+var checkAudio = headbar.getElementsByClassName("PRONS")[0];
+var audioSrc = null;
+if ((checkAudio != undefined) && (checkAudio != null)){
+  audioSrc = checkAudio.getElementsByClassName("sound")[0].getAttribute("data-src-mp3");
+}
+
 
 console.log(wordJson);
 console.log(word);
 console.log(audioSrc);
 
-var audioLink = document.createElement("a");
-audioLink.appendChild(document.createTextNode("Download audio"));
-audioLink.download = "";
-audioLink.href = audioSrc;
+var audioLink;
+if (audioSrc != null){
+  audioLink = document.createElement("a");
+  audioLink.appendChild(document.createTextNode("Download audio"));
+  audioLink.download = "";
+  audioLink.href = audioSrc;
+}
+else{
+  audioLink = document.createElement("span");
+  audioLink.style = "color:red; font-size:2em";
+  audioLink.textContent = "Audio not found!"
+}
 
 var jsonContainer = document.createElement("div");
 jsonContainer.innerText = wordJson;

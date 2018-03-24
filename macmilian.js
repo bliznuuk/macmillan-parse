@@ -75,7 +75,6 @@ var jsonContainer = document.createElement("div");
 jsonContainer.innerText = wordJson;
 
 var innerRightCol = document.getElementById("innerrightcol");
-//innerRightCol.innerHTML = "";
 innerRightCol.appendChild(audioLink);
 innerRightCol.appendChild(jsonContainer);
 
@@ -150,6 +149,15 @@ function getRelatedWords(){
   let result = [];
   for (let li of lis){
     let base = getTextContent(li.getElementsByClassName("BASE")[0]);
+    if (base == null){
+      base = getTextContent(li.getElementsByClassName("INFLX")[0]);
+      if (base == null){
+        let alrt = document.createElement("span");
+        alrt.style = "color:red;font-weight:bold;font-size:3em";
+        alrt.textContent = "related word missing!"
+        document.getElementById("headbar").appendChild(alrt);
+      }
+    }
     let partOfSpeech = getTextContent(li.getElementsByClassName("PART-OF-SPEECH")[0]);
     
     let ReletedWord = new Meaning();

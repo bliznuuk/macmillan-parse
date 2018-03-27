@@ -166,9 +166,13 @@ function getRelatedWords(){
     if (base == null){
       base = getTextContent(li.getElementsByClassName("INFLX")[0]);
       if (base == null){
+        let a = li.getElementsByTagName("a")[0];
+        base = a.title;
+        
+        //add message to the page
         let alrt = document.createElement("span");
-        alrt.style = "color:red;font-weight:bold;font-size:3em";
-        alrt.textContent = "related word missing!"
+        alrt.style = "color:red;font-weight:bold;font-size:2em";
+        alrt.innerText = "related word missing! Add: " + base + "\n";
         document.getElementById("headbar").appendChild(alrt);
       }
     }
